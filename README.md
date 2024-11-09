@@ -10,8 +10,8 @@ docker compose run composer create-project laravel/laravel .<br>
 docker compose up --detach<br>
 <br>
 <b>Запускаем поочередно команы:</b><br>
+docker compose exec -T php chmod -R 777 /var/www/laravel/storage<br>
 docker compose run artisan key:generate <br>
-exec -T php chmod -R 777 /var/www/laravel/storage<br>
 docker compose run artisan migrate<br>
 <br>
 Заходим на <a href="http://localhost:8000/" target="_blank">localhost:8000</a>, и проверяем работоспособность, сайт должен отобразиться там, если вы не меняли конфик докера.<br>
