@@ -12,7 +12,7 @@ RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.
     && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.idekey=PHPSTORM" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-#Хватит для дефолтных приложений Laravel
+# Хватит для дефолтных приложений Laravel
 RUN apt-get update && apt-get install -y \
 		libfreetype-dev \
 		libjpeg62-turbo-dev \
@@ -20,3 +20,8 @@ RUN apt-get update && apt-get install -y \
 	&& docker-php-ext-configure gd --with-freetype --with-jpeg \
 	&& docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo pdo_mysql
+
+# Добавление поддержки pcntl
+# Без pcntl не будет работать reverb для вебсокетов
+RUN docker-php-ext-configure pcntl --enable-pcntl \
+  && docker-php-ext-install pcntl
