@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+  #Наш сервак, отображает сайт на localhost:8000
   nginx:
     image: "nginx:stable-alpine"
     ports:
@@ -11,6 +12,7 @@ services:
     depends_on:
       - mysql
       - php
+  #PHP, его настройки и установка модулей в файле php.Dockerfile
   php:
     build:
       context: dockerfiles
@@ -19,6 +21,19 @@ services:
       - ./src:/var/www/laravel
     extra_hosts:
       - host.docker.internal:host-gateway
+  #Reverb сервис для работы с вебсокетами
+  reverb:
+    build:
+      context: dockerfiles
+      dockerfile: php.Dockerfile  # используйте тот же Dockerfile
+    volumes:
+      - ./src:/var/www/laravel
+    entrypoint: [ "php", "/var/www/laravel/artisan", "reverb:start" ]
+    ports:
+      - "8080:8080"  # Проброс порта 8080 для WebSocket
+    depends_on:
+      - php  # Этот сервис зависит от php
+  #Ну это просто mysql база данных
   mysql:
     image: mysql:8.0
     ports:
@@ -27,19 +42,22 @@ services:
       - env/mysql.env
     volumes:
       - db_data:/var/lib/mysql
+  #А это phpmyadmin доступный на localhost:8088
   phpmyadmin:
     image: phpmyadmin
     restart: always
     ports:
-      - "8080:80"
+      - "8088:80"
     environment:
       - PMA_ARBITRARY=1
+  #Композер, пакетный менеджер, запускаем docker compose run composer require.....
   composer:
     build:
       context: dockerfiles
       dockerfile: composer.Dockerfile
     volumes:
       - ./src:/var/www/laravel
+  #Ларовский artisan, запускаем docker compose run artisan make:model.....
   artisan:
     build:
       context: dockerfiles
