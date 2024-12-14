@@ -50,6 +50,16 @@ services:
       - "8088:80"
     environment:
       - PMA_ARBITRARY=1
+  # Воркер для обработки задач в очереди
+  queue-worker:
+    build:
+      context: dockerfiles
+      dockerfile: php.Dockerfile
+    volumes:
+      - ./src:/var/www/laravel
+    depends_on:
+      - mysql  # Убедитесь, что воркер запускается после базы данных
+    command: ["php", "/var/www/laravel/artisan", "queue:work", "--sleep=3", "--tries=3"]
   #Композер, пакетный менеджер, запускаем docker compose run composer require.....
   composer:
     build:
