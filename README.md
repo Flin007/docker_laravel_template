@@ -6,6 +6,9 @@
 <b>Устанавливаем Laravel командой:</b><br>
 docker compose run composer create-project laravel/laravel .<br>
 <br>
+<b>Правим ларовский env:</b><br>
+Нужно указать подключение к бд, которые были указаны в env/mysql.env<br>
+<br>
 <b>Затем запускаем контейнеры:</b><br>
 docker compose up --detach<br>
 <br>
