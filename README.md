@@ -15,7 +15,7 @@ DB_HOST - название mysql сервиса из docker-compose.yaml<br>
 docker compose up --detach<br>
 <br>
 <b>Запускаем поочередно команы:</b><br>
-docker compose exec -T php chmod -R 777 /var/www/laravel/storage<br>
+docker compose exec php chmod --recursive 777 /var/www/laravel/storage /var/www/laravel/bootstrap/cache<br>
 docker compose run artisan key:generate <br>
 docker compose run artisan migrate<br>
 <br>
